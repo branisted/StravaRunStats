@@ -1,0 +1,7 @@
+pytesseract
+numpy
+opencv-python
+pillow
+sqlalchemy
+fastapi[standard]
+uvicorn

@@ -1,48 +1,99 @@
-# StravaRunStats
 
-## Dependencies:
-Python 3:
-sudo apt install python3-full
+StravaRunStats
+==============
 
-pip:
-sudo apt install python3-pip
+A FastAPI backend with a React frontend that extracts and analyzes running data from image uploads using OCR.
 
-venv:
-sudo apt install python3-venv
+Requirements
+------------
 
-create venv:
-python3 -m venv ./.venv
+- Python 3
+- Tesseract OCR
 
-change python3 interpreter to the .venv/bin one
-the following commands - pip and python3 will be run using [.venv/bin/]
+Dependencies
+------------
 
-Tesseract OCR:
-sudo apt install tesseract-ocr
+The following tools and libraries are required:
 
-pytesseract:
-pip install pytesseract
+System Packages (Ubuntu/Debian):
 
-numpy:
-pip install numpy
+```
+sudo apt update
+sudo apt install -y python3-full python3-pip python3-venv tesseract-ocr
+```
 
-python3 extract.py <directory/file>
+Python Packages:
 
-fastAPI:
+You can install all Python dependencies using the provided virtual environment:
 
-pip install "fastapi[standard]"
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-cv2:
+Then install dependencies:
 
-pip install opencv-python
+```
+pip install -r requirements.txt
+```
 
-sqlalchemy:
+Required Python packages:
 
-pip install sqlalchemy
+- pytesseract
+- numpy
+- opencv-python
+- pillow
+- sqlalchemy
+- fastapi[standard]
+- uvicorn
 
-pillow:
+Usage
+-----
 
-pip install pillow
+1. Run Backend Server
 
-uvicorn:
+```
+chmod +x backend/run_server.sh
+./backend/run_server.sh
+```
 
-pip install uvicorn
+This starts the FastAPI server with live reload enabled.
+
+Initialization Script
+---------------------
+
+You can run the following script to automatically set up everything:
+
+init.sh
+----------------
+```
+#!/bin/bash
+echo "Installing system dependencies..."
+sudo apt update
+sudo apt install -y python3-full python3-pip python3-venv tesseract-ocr
+echo "Setting up Python virtual environment..."
+python3 -m venv .venv
+source .venv/bin/activate
+echo "Installing Python dependencies..."
+pip install -r requirements.txt
+echo "Setup complete. To activate your environment:"
+echo "   source .venv/bin/activate"
+```
+
+Make it executable and run it:
+
+    chmod +x init.sh
+    ./init.sh
+
+requirements.txt
+----------------
+
+    pytesseract
+    numpy
+    opencv-python
+    pillow
+    sqlalchemy
+    fastapi[standard]
+    uvicorn
+
+Note: This is the backend setup. The frontend section will be added later.
