@@ -1,0 +1,56 @@
+# main.py
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+import shutil
+import uuid
+from extract import extract_text
+from crud import save_activity, get_all_activities
+from database import SessionLocal, engine, Base
+from models import Activity
+import os
+
+app = FastAPI()
+
+# CORS for frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+UPLOAD_DIR = "static/uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+Base.metadata.create_all(bind=engine)
+
+@app.post("/upload")
+async def upload_image(file: UploadFile = File(...)):
+    if not file.filename.lower().endswith((".png", ".jpg", ".jpeg")):
+        raise HTTPException(status_code=400, detail="Unsupported file type.")
+
+    file_id = f"{uuid.uuid4()}.jpeg"
+    file_path = os.path.join(UPLOAD_DIR, file_id)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return {"file_path": file_path}
+
+@app.post("/extract")
+async def extract_data(file_path: str):
+    data = await extract_text(file_path)
+    return data
+
+@app.post("/save")
+async def save_data(data: dict):
+    db = SessionLocal()
+    activity = save_activity(db, data)
+    return {"status": "success", "id": activity.id}
+
+@app.get("/data")
+async def read_all():
+    db = SessionLocal()
+    return get_all_activities(db)
