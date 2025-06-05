@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import MyBarChart from '../components/MyBarChart.jsx';
 import { useDropzone } from 'react-dropzone';
+import styles from './Home.module.css';
 
 const BASE_URL = "http://127.0.0.1:8000";
 const API = {
@@ -112,53 +113,29 @@ function Home() {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div style={{ position: 'relative', minHeight: '100vh' }}>
+        <div className={styles.container}>
             {isDragActive && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        zIndex: 9999,
-                        top: 0,
-                        left: 0,
-                        width: '100vw',
-                        height: '100vh',
-                        background: 'rgba(50, 50, 50, 0.85)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#fff',
-                        fontSize: '2.5rem',
-                        pointerEvents: 'none',
-                        transition: 'background 0.2s',
-                    }}
-                >
+                <div className={styles.overlay}>
                     <p>Drop the files anywhere to upload...</p>
                 </div>
             )}
 
-            <h1 align="center">StravaRunStats</h1>
+            <h1 className={styles.title}>StravaRunStats</h1>
 
             <div
                 {...getRootProps()}
-                style={{
-                    border: '2px dashed #888',
-                    margin: '0 auto',
-                    width: '60%',
-                    padding: '20px',
-                    textAlign: 'center',
-                    borderRadius: '10px',
-                    background: isDragActive ? '#eee' : '#fff',
-                    marginBottom: '2rem',
-                    transition: 'background 0.2s',
-                }}
+                className={`${styles.dropzone} ${isDragActive ? styles.dropzoneActive : ''}`}
             >
                 <input {...getInputProps()} />
-                <p>{isDragActive ? "Drop the files here ..." : "Drag & drop files here, or click to select files"}</p>
-
+                <p className={styles.dropzoneText}>
+                    {isDragActive
+                        ? "Drop the files here ..."
+                        : "Drag & drop files here, or click to select files"}
+                </p>
                 {files.length > 0 && (
-                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                    <ul className={styles.fileList}>
                         {files.map(file => (
-                            <li key={file.name}>
+                            <li key={file.name} className={styles.fileItem}>
                                 {file.name} - {(file.size / 1024).toFixed(2)} KB
                             </li>
                         ))}
@@ -167,11 +144,11 @@ function Home() {
             </div>
 
             {data && data.length > 0 ? (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div className={styles.chartContainer}>
                     <MyBarChart data={data} />
                 </div>
             ) : (
-                <h1 align="center">
+                <h1 className={styles.emptyMessage}>
                     Add some runs to see some data by drag and dropping them here.
                 </h1>
             )}
