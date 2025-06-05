@@ -4,9 +4,14 @@ StravaRunStats
 
 A FastAPI backend with a React frontend that extracts and analyzes running data from image uploads using OCR.
 
+Contents:
+1. [Backend](#backend)
+2. [Frontend](#frontend)
+
+# Backend
+___
 Requirements
 ------------
-
 - Python 3
 - Tesseract OCR
 
@@ -27,6 +32,7 @@ Python Packages:
 You can install all Python dependencies using the provided virtual environment:
 
 ```
+cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 ```
@@ -50,7 +56,7 @@ Required Python packages:
 Usage
 -----
 
-1. Run Backend Server
+Run Backend Server
 
 ```
 chmod +x backend/run_server.sh
@@ -96,4 +102,18 @@ requirements.txt
     fastapi[standard]
     uvicorn
 
-Note: This is the backend setup. The frontend section will be added later.
+# Frontend
+___
+Requirements
+------------
+
+- Node (npm)
+- React
+
+Dependencies
+------------
+
+```
+cd frontend/
+npm install
+```
