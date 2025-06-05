@@ -8,6 +8,7 @@ function Home() {
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
     const [files, setFiles] = useState([]);
+    const [globalDragActive, setGlobalDragActive] = useState(false);
 
     // The function to process a single file through all endpoints
     async function processFile(file) {
@@ -74,35 +75,93 @@ function Home() {
                 setError(err.message || "Error fetching data");
                 setLoading(false);
             });
+
+        let dragCounter = 0;
+
+        const handleDragEnter = (e) => {
+            e.preventDefault();
+            dragCounter++;
+            setGlobalDragActive(true);
+        };
+
+        const handleDragLeave = (e) => {
+            e.preventDefault();
+            dragCounter--;
+            if (dragCounter === 0) setGlobalDragActive(false);
+        };
+
+        const handleDrop = (e) => {
+            dragCounter = 0;
+            setGlobalDragActive(false);
+        };
+
+        window.addEventListener('dragenter', handleDragEnter);
+        window.addEventListener('dragleave', handleDragLeave);
+        window.addEventListener('drop', handleDrop);
+
+        return () => {
+            window.removeEventListener('dragenter', handleDragEnter);
+            window.removeEventListener('dragleave', handleDragLeave);
+            window.removeEventListener('drop', handleDrop);
+        };
+
     }, []);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div>
+        <div style={{ position: 'relative', minHeight: '100vh' }}>
+            {/* Full screen overlay when dragging files */}
+            {isDragActive && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        zIndex: 9999,
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        background: 'rgba(50, 50, 50, 0.85)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontSize: '2.5rem',
+                        pointerEvents: 'none', // Allow drop events to pass through
+                        transition: 'background 0.2s'
+                    }}
+                >
+                    <div>
+                        <p>Drop the files anywhere to upload...</p>
+                    </div>
+                </div>
+            )}
+
             <h1 align="center">StravaRunStats</h1>
+
             {/* Always show the dropzone */}
             <div
                 {...getRootProps()}
                 style={{
                     border: '2px dashed #888',
                     margin: '0 auto',
-                    width: '48%',
+                    width: '60%',
                     padding: '20px',
                     textAlign: 'center',
                     borderRadius: '10px',
                     background: isDragActive ? '#eee' : '#fff',
-                    marginBottom: '2rem'
+                    marginBottom: '2rem',
+                    transition: 'background 0.2s'
                 }}
             >
                 <input {...getInputProps()} />
                 {isDragActive ? (
-                    <p>Drop the files here ...</p>
+                    <p style={{ fontWeight: 'bold', color: '#444' }}>Drop the files here ...</p>
                 ) : (
                     <p>Drag & drop files here, or click to select files</p>
                 )}
-                <ul>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
                     {files.map(file => (
                         <li key={file.name}>
                             {file.name} - {(file.size / 1024).toFixed(2)} KB
@@ -113,8 +172,8 @@ function Home() {
 
             {/* Conditionally show chart or message */}
             {data && data.length > 0 ? (
-                <div align="center">
-                    <MyBarChart data={data}/>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <MyBarChart data={data} />
                 </div>
             ) : (
                 <h1 align="center">
