@@ -1,1 +1,1 @@
-uvicorn main:app --reload
+../.venv/bin/uvicorn main:app --reload

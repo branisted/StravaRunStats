@@ -7,3 +7,4 @@ static/
 .env
 *.db
 *.jpeg
+node_modules/

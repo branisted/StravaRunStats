@@ -10,6 +10,16 @@ from database import SessionLocal, engine, Base
 from models import Activity
 import os
 
+from pydantic import BaseModel
+
+class ExtractRequest(BaseModel):
+    file_name: str
+
+# import logging
+#
+# logging.basicConfig(level=logging.DEBUG)
+# logger = logging.getLogger(__name__)
+
 app = FastAPI()
 
 # CORS for frontend access
@@ -40,8 +50,8 @@ async def upload_image(file: UploadFile = File(...)):
     return {"file_path": file_path}
 
 @app.post("/extract")
-async def extract_data(file_path: str):
-    data = await extract_text(file_path)
+async def extract_data(request: ExtractRequest):
+    data = await extract_text(request.file_name)
     return data
 
 @app.post("/save")
