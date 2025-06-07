@@ -5,3 +5,4 @@ pillow
 sqlalchemy
 fastapi[standard]
 uvicorn
+pyinstaller

@@ -4,12 +4,29 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist-win": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.brad.strats",
+    "extraFiles": [
+      {
+        "from": "../backend/dist/main.exe",
+        "to": "backend/main.exe"
+      }
+    ],
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "build/icon.ico"
+    }
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^36.4.0"
+    "app-builder": "^7.0.4",
+    "electron": "^36.4.0",
+    "electron-builder": "^26.0.12"
   }
 }

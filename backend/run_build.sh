@@ -1,0 +1,1 @@
+../.venv/bin/pyinstaller -F main.py --clean
