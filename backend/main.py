@@ -9,6 +9,7 @@ from crud import save_activity, get_all_activities
 from database import SessionLocal, engine, Base
 from models import Activity
 import os
+import uvicorn
 
 from pydantic import BaseModel
 
@@ -64,3 +65,6 @@ async def save_data(data: dict):
 async def read_all():
     db = SessionLocal()
     return get_all_activities(db)
+
+if __name__ == "__main__":
+    uvicorn.run(app, port=8000)

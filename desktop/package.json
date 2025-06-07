@@ -1,5 +1,5 @@
 {
-  "name": "desktop",
+  "name": "StravaRunStats",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -11,9 +11,9 @@
   },
   "build": {
     "appId": "com.brad.strats",
-    "extraFiles": [
+    "extraResources": [
       {
-        "from": "../backend/dist/main.exe",
+        "from": "build/main.exe",
         "to": "backend/main.exe"
       }
     ],
