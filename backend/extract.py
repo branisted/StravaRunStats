@@ -7,8 +7,6 @@ import numpy as np
 import asyncio
 import json
 
-pytesseract_config = 'lang=ron'
-
 def preprocess(imgPath: str):
 
     img = Image.open(imgPath).convert('L')

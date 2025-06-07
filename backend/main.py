@@ -4,7 +4,14 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import uuid
-from extract import extract_text
+
+import platform
+
+if platform.system() == "Windows":
+    from extract_win import extract_text
+else:
+    from extract import extract_text
+
 from crud import save_activity, get_all_activities
 from database import SessionLocal, engine, Base
 from models import Activity

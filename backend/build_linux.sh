@@ -1,0 +1,1 @@
+../.venv/bin/pyinstaller main.spec

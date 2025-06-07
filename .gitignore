@@ -11,4 +11,3 @@ node_modules/
 test.py
 build/
 dist/
-*.spec
