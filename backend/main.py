@@ -48,7 +48,7 @@ async def upload_image(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    return {"file_path": file_path}
+    return {"file_path": file_path.replace(os.sep, "/")}
 
 @app.post("/extract")
 async def extract_data(request: ExtractRequest):

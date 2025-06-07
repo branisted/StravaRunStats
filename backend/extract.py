@@ -6,7 +6,6 @@ import pytesseract
 import numpy as np
 import asyncio
 import json
-import cv2
 
 pytesseract_config = 'lang=ron'
 

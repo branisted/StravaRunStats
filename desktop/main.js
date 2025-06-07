@@ -11,20 +11,14 @@ function createWindow() {
         // webPreferences: { ... }
     });
 
-    // If you use Vite for development, adjust this as needed
-    const startUrl = app.isPackaged
-        ? `file://${path.join(process.resourcesPath, 'dist', 'index.html')}`
-        : 'http://localhost:5173';
-    // const startUrl = `file://${path.join(__dirname, 'dist', 'index.html')}`
-
-    // IMPORTANT: TREB DE REBUILDUIT TOT
+    // const startUrl = `file://${path.join(__dirname, 'build/dist', 'index.html')}`
 
     if (app.isPackaged) {
-        // In production: exe is in resources/backend/main.exe
-        win.loadFile(startUrl);
+        // In production: pass a file path, not a file:// URL
+        win.loadFile(path.join(process.resourcesPath, 'dist', 'index.html'));
     } else {
-        // In development: exe is in your project folder
-        win.loadURL(startUrl);
+        // In development: pass the dev server URL
+        win.loadURL('http://localhost:5173');
     }
 
 }
@@ -32,10 +26,8 @@ function createWindow() {
 app.whenReady().then(() => {
     let backendPath;
     if (app.isPackaged) {
-        // In production: exe is in resources/backend/main.exe
         backendPath = path.join(process.resourcesPath, 'backend', 'main.exe');
     } else {
-        // In development: exe is in your project folder
         backendPath = path.join(__dirname, 'build', 'main.exe');
     }
 
