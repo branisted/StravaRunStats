@@ -88,7 +88,7 @@ def format_text_json(text: str):
         formatted_date = "Not found"
 
     dist_match = re.search(r'(\d+(?:\.\d+)?)\s?km', text, re.IGNORECASE)
-    distance = dist_match.group(0) if dist_match else "Not found"
+    distance = dist_match.group(0).replace(" ", "") if dist_match else "Not found"
 
     time_match = re.search(r'(\d+\s?m\s?\d+\s?s)', text)
     time = time_match.group(1).replace(" ", "") if time_match else "Not found"
@@ -121,6 +121,7 @@ async def extract_text(usedPath: str):
             tmp = pytesseract.image_to_string(img)
             tmp = fix_date_spacing(tmp)
             tmp = fix_text_ocr(tmp)
+            # print(tmp)
             text = text + str(format_text_json(tmp)) + "\n"
             
         return text
