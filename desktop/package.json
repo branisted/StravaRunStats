@@ -15,6 +15,10 @@
       {
         "from": "build/main.exe",
         "to": "backend/main.exe"
+      },
+      {
+        "from": "build/dist",
+        "to": "dist"
       }
     ],
     "win": {

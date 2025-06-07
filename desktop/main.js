@@ -12,12 +12,21 @@ function createWindow() {
     });
 
     // If you use Vite for development, adjust this as needed
-    const isDev = !app.isPackaged;
-    const startUrl = isDev
-        ? 'http://localhost:5173'
-        : `file://${path.join(__dirname, 'dist', 'index.html')}`;
+    const startUrl = app.isPackaged
+        ? `file://${path.join(process.resourcesPath, 'dist', 'index.html')}`
+        : 'http://localhost:5173';
+    // const startUrl = `file://${path.join(__dirname, 'dist', 'index.html')}`
 
-    win.loadURL(startUrl);
+    // IMPORTANT: TREB DE REBUILDUIT TOT
+
+    if (app.isPackaged) {
+        // In production: exe is in resources/backend/main.exe
+        win.loadFile(startUrl);
+    } else {
+        // In development: exe is in your project folder
+        win.loadURL(startUrl);
+    }
+
 }
 
 app.whenReady().then(() => {

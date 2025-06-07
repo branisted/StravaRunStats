@@ -4,7 +4,10 @@ import MyBarChart from '../components/MyBarChart.jsx';
 import { useDropzone } from 'react-dropzone';
 import styles from './Home.module.css';
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = import.meta.env.MODE === 'development'
+    ? 'http://localhost:8000'
+    : 'http://127.0.0.1:8000';
+
 const API = {
     upload: `${BASE_URL}/upload`,
     extract: `${BASE_URL}/extract`,
