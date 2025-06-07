@@ -6,8 +6,11 @@ import pytesseract
 import numpy as np
 import asyncio
 import json
+import cv2
 
-def open_edit_image(imgPath: str):
+pytesseract_config = 'lang=ron'
+
+def preprocess(imgPath: str):
 
     img = Image.open(imgPath).convert('L')
 
@@ -15,7 +18,7 @@ def open_edit_image(imgPath: str):
     img_np = np.array(img)
 
     # threshold value (180-220)
-    threshold = 185
+    threshold = 190
     binary = (img_np > threshold) * 255
     binary = binary.astype(np.uint8)
 
@@ -31,6 +34,22 @@ def open_edit_image(imgPath: str):
     # Image.fromarray(cropped).save('imgmodified.jpeg')
 
     return cropped
+
+
+
+def fix_date_spacing(text):
+    # List of Romanian months
+    months = [
+        "ianuarie", "februarie", "martie", "aprilie", "mai", "iunie", 
+        "iulie", "august", "septembrie", "octombrie", "noiembrie", "decembrie"
+    ]
+    # Regex: digit(s) directly followed by a month name
+    pattern = r'(\d{1,2})(' + '|'.join(months) + r')'
+    # Insert space between digit(s) and month
+    fixed_text = re.sub(pattern, r'\1 \2', text, flags=re.IGNORECASE)
+    return fixed_text
+
+
 
 def fix_text_ocr(text: str):
 
@@ -86,6 +105,8 @@ def format_text_json(text: str):
 
     return result
 
+
+
 async def extract_text(usedPath: str):
 
     if (os.path.isdir(usedPath) == True):
@@ -96,10 +117,11 @@ async def extract_text(usedPath: str):
         for f in files:
 
             text = text + f"Text from {f.name}:" + "\n"
-            img = open_edit_image(f)
+            img = preprocess(f)
             tmp = pytesseract.image_to_string(img)
+            tmp = fix_date_spacing(tmp)
             tmp = fix_text_ocr(tmp)
-            text = text + format_text_json(tmp) + "\n"
+            text = text + str(format_text_json(tmp)) + "\n"
             
         return text
 
@@ -109,14 +131,19 @@ async def extract_text(usedPath: str):
             print('Image extension not accepted.')
             exit
 
-        img = open_edit_image(usedPath)
+        img = preprocess(usedPath)
         text = pytesseract.image_to_string(img)
+        # text = pytesseract.image_to_string(usedPath)
+        text = fix_date_spacing(text)
         text = fix_text_ocr(text)
         
         return format_text_json(text)
+        #return text
 
     else:
 
         print('Incorrect usage: extractTextFromImage(directory/image)')
 
         return "No text found."
+    
+    return

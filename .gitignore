@@ -8,3 +8,4 @@ static/
 *.db
 *.jpeg
 node_modules/
+test.py
